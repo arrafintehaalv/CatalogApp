@@ -1,26 +1,29 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/store';
 import TabNavigator from './TabNavigator';
 import LoginScreen from '../screens/Auth/LoginScreen';
+import { NavigationContainer } from '@react-navigation/native';
 
-export type RootStackParamList = {
-  Login: undefined;
-  Home: undefined;
-};
+const Stack = createNativeStackNavigator();
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const RootNavigator = () => {
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
 
-export default function RootNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Login"
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Home" component={TabNavigator} />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {!isAuthenticated ? (
+          <Stack.Screen name="Login" component={LoginScreen} />
+        ) : (
+          <Stack.Screen name="Home" component={TabNavigator} />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+export default RootNavigator;
