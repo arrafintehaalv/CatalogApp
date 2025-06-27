@@ -5,8 +5,9 @@ import { RootState } from '../app/store';
 import TabNavigator from './TabNavigator';
 import LoginScreen from '../screens/Auth/LoginScreen';
 import { NavigationContainer } from '@react-navigation/native';
+import { RootStackParamList } from '../types/Navigation';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const RootNavigator = () => {
   const isAuthenticated = useSelector(
