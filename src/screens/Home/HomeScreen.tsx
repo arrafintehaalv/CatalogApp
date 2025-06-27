@@ -5,6 +5,7 @@ import { useGetProductsQuery } from '../../api/api';
 import ProductList from '../../components/home/ProductList';
 import { Product } from '../../types/Product';
 import { HomeStackParamList } from '../../types/Navigation';
+import { TimestampDisplay } from '../../components/home/TimestampDisplay';
 
 const PAGE_SIZE = 10;
 
@@ -72,6 +73,7 @@ const HomeScreen = () => {
 
   return (
     <>
+      <TimestampDisplay />
       <ProductList
         products={products}
         onPressItem={handlePress}
