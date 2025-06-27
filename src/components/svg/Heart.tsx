@@ -1,12 +1,12 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-export const Heart = ({ color = '#000', size = 24 }) => (
+export const Heart = ({ color = '#000', size = 24, filled = false }) => (
   <Svg
     viewBox="0 0 24 24"
     width={size}
     height={size}
-    fill="none"
+    fill={filled ? color : 'none'}
     stroke={color}
     strokeWidth={2}
     strokeLinecap="round"

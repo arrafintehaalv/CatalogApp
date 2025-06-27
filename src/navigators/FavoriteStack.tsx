@@ -1,18 +1,18 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '../screens/Home/HomeScreen';
-import { HomeStackParamList } from '../types/Navigation';
+import { FavoriteStackParamList } from '../types/Navigation';
 import ProductDetailsScreen from '../screens/Home/ProductDetailsScreen';
+import FavoriteScreen from '../screens/Home/FavoriteScreen';
 
-const Stack = createNativeStackNavigator<HomeStackParamList>();
+const Stack = createNativeStackNavigator<FavoriteStackParamList>();
 
-export default function HomeStack() {
+export default function FavoriteStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ title: 'Home' }}
+        name="Favorite"
+        component={FavoriteScreen}
+        options={{ title: 'Favorite' }}
       />
       <Stack.Screen
         name="ProductDetails"

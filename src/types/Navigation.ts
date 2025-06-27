@@ -10,6 +10,11 @@ export type TabParamList = {
 };
 
 export type HomeStackParamList = {
-  HomeMain: undefined;
+  Home: undefined;
+  ProductDetails: { productId: number };
+};
+
+export type FavoriteStackParamList = {
+  Favorite: undefined;
   ProductDetails: { productId: number };
 };

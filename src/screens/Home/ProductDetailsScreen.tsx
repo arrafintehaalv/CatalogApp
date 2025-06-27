@@ -1,10 +1,23 @@
 import React, { useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+  Pressable,
+} from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../../types/Navigation';
 import { useGetProductByIdQuery } from '../../api/api';
 import { Star } from '../../components/svg/Star';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import {
+  addFavourite,
+  removeFavourite,
+} from '../../features/favourites/favouritesSlice';
+import { Heart } from '../../components/svg';
 
 type ProductDetailsRouteProp = RouteProp<HomeStackParamList, 'ProductDetails'>;
 
@@ -12,8 +25,31 @@ export default function ProductDetailsScreen() {
   const { params } = useRoute<ProductDetailsRouteProp>();
   const { productId } = params;
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
   const { data: product, isLoading, error } = useGetProductByIdQuery(productId);
+
+  const favorites = useAppSelector(state => state.favourites.items);
+
+  const isFavorite = favorites.some(p => p.id === productId);
+
+  const toggleFavourite = () => {
+    if (isFavorite) {
+      dispatch(removeFavourite(productId));
+    } else {
+      if (product) {
+        const favProduct = {
+          id: product.id,
+          title: product.title,
+          description: product.description,
+          price: product.price,
+          brand: product.brand,
+          thumbnail: product.thumbnail,
+        };
+        dispatch(addFavourite(favProduct));
+      }
+    }
+  };
 
   useLayoutEffect(() => {
     const parent = navigation.getParent && navigation.getParent();
@@ -63,7 +99,16 @@ export default function ProductDetailsScreen() {
       )}
       ListHeaderComponent={
         <>
-          <Image source={{ uri: product.thumbnail }} style={styles.thumbnail} />
+          <View style={styles.imageWrapper}>
+            <Image
+              source={{ uri: product.thumbnail }}
+              style={styles.thumbnail}
+            />
+            <Pressable style={styles.favButton} onPress={toggleFavourite}>
+              <Heart size={28} color={isFavorite ? 'red' : '#999'} />
+            </Pressable>
+          </View>
+
           <View style={styles.header}>
             <Text style={styles.title}>{product.title}</Text>
             <Text style={styles.price}>${product.price.toFixed(2)}</Text>
@@ -123,6 +168,18 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
+  imageWrapper: {
+    position: 'relative',
+  },
+  favButton: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 6,
+    elevation: 3,
+  },
   thumbnail: {
     width: '100%',
     height: 250,
@@ -174,10 +231,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 4,
-  },
-  reviewRating: {
-    fontSize: 14,
-    fontWeight: '600',
   },
   reviewComment: {
     fontStyle: 'italic',

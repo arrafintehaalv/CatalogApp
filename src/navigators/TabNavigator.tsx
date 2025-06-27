@@ -1,9 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import FavoriteScreen from '../screens/Home/FavoriteScreen';
 import MapScreen from '../screens/Home/MapScreen';
 import HomeStack from './HomeStack';
 import { Home, Heart, Map } from '../components/svg';
+import FavoriteStack from './FavoriteStack';
 
 export type TabParamList = {
   Home: undefined;
@@ -47,13 +47,13 @@ export default function TabNavigator() {
       />
       <Tab.Screen
         name="Favorite"
-        component={FavoriteScreen}
+        component={FavoriteStack}
         options={{ headerShown: false }}
       />
       <Tab.Screen
         name="Map"
         component={MapScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: true }}
       />
     </Tab.Navigator>
   );

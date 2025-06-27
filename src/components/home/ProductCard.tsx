@@ -1,49 +1,69 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Product } from '../../types/Product';
-
-const { width } = Dimensions.get('window');
-const cardWidth = width * 0.9;
+import {
+  addFavourite,
+  removeFavourite,
+} from '../../features/favourites/favouritesSlice';
+import { Heart } from '../svg';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 type ProductCardProps = {
   item: Product;
   onPress: () => void;
 };
 
-const ProductCard = React.memo(({ item, onPress }: ProductCardProps) => (
-  <TouchableOpacity activeOpacity={0.85} onPress={onPress} style={styles.card}>
-    <Image source={{ uri: item.thumbnail }} style={styles.image} />
-    <View style={styles.cardBody}>
-      <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.brand}>{item.brand}</Text>
-      <View style={styles.priceWrapper}>
-        <Text style={styles.price}>${item.price}</Text>
-      </View>
-    </View>
-  </TouchableOpacity>
-));
+export default function ProductCard({ item, onPress }: ProductCardProps) {
+  const dispatch = useAppDispatch();
+  const favourites = useAppSelector(state => state.favourites.items);
 
-export default ProductCard;
+  const isFavourite = favourites.some(p => p.id === item.id);
+
+  const toggleFavourite = () => {
+    if (isFavourite) {
+      dispatch(removeFavourite(item.id));
+    } else {
+      dispatch(addFavourite(item));
+    }
+  };
+
+  return (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={onPress}
+      activeOpacity={0.85}
+    >
+      <Image source={{ uri: item.thumbnail }} style={styles.image} />
+      <View style={styles.cardBody}>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.brand}>{item.brand}</Text>
+        <View style={styles.bottomRow}>
+          <Text style={styles.price}>${item.price}</Text>
+          <TouchableOpacity
+            onPress={toggleFavourite}
+            style={styles.heartButton}
+          >
+            {isFavourite ? (
+              <Heart size={20} color="#e11d48" />
+            ) : (
+              <Heart size={20} color="#999" />
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+}
 
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
-    width: cardWidth,
-    marginBottom: 16,
-    borderRadius: 16,
+    borderRadius: 12,
     overflow: 'hidden',
+    marginBottom: 16,
+    width: '90%',
+    alignSelf: 'center',
     elevation: 3,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
   },
   image: {
     width: '100%',
@@ -56,24 +76,24 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#111',
   },
   brand: {
     fontSize: 14,
     color: '#777',
     marginTop: 4,
   },
-  priceWrapper: {
+  bottomRow: {
     marginTop: 10,
-    backgroundColor: '#1d4ed8',
-    alignSelf: 'flex-start',
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   price: {
-    color: '#fff',
+    fontSize: 16,
     fontWeight: '600',
-    fontSize: 14,
+    color: '#1d4ed8',
+  },
+  heartButton: {
+    padding: 4,
   },
 });
