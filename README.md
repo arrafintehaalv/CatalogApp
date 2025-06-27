@@ -1,5 +1,3 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
-
 # Getting Started
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
@@ -58,40 +56,34 @@ npm run ios
 yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Step 3: Challenges and Fixes
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+📍 1. React Native Maps & Geolocation on Android 12+
+• Background Permissions: Android 12+ enforces strict location permission policies.
+Must handle ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION with runtime prompts.
+• Background Execution: Apps targeting API 31+ need android:exported for certain components.
+• Google Maps API Keys needed to be configured properly to work both on android and ios.
+• App Crashes: If permissions are not granted at runtime, react-native-maps and react-native-geolocation-service can fail silently or crash. So used @react-native-community/geolocation library.
 
-## Step 3: Modify your app
+⸻
 
-Now that you have successfully run the app, let's make changes!
+🧩 2. Integrating Native Modules
+• Header Search Paths: Common build errors like Yoga.h not found if HEADER_SEARCH_PATHS or modular_headers not handled.
+• Manual Linking: Custom native modules require extra Swift bridging files or Objective-C .h/.m files to expose to JS.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+⸻
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+🗂️ 3. FlashList: Duplicating & Filtering Product Lists
+• Duplication: Needed to filter out the duplicated list comes from the server and maintain unique list.
+• Performance: Using FlashList improved render performance over FlatList but required careful key extraction.
+• State Sync: Filtering logic needed to sync well with useState and useMemo to prevent unnecessary re-renders.
+• Empty State: Had to handle scenarios where filter returned zero results without crashing list rendering.
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+⸻
 
-## Congratulations! :tada:
+✅ Summary
 
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+This project demonstrates React Native setup for modern Android/iOS development with:
+• React Native Maps
+• Native Modules
+• FlashList for high-performance product lists
